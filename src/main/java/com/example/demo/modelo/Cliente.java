@@ -34,6 +34,8 @@ public class Cliente {
 	private String genero;
 	@Column(name = "clie_registro")
 	private String registro;
+	@Column(name = "clie_vip")
+	private String vip;
 
 	// RELACION
 
@@ -105,12 +107,21 @@ public class Cliente {
 		this.registro = registro;
 	}
 
+	public String getVip() {
+		return vip;
+	}
+
+	public void setVip(String vip) {
+		this.vip = vip;
+	}
+
 	// TO STRING
+
 	@Override
 	public String toString() {
 		return "Cliente [id=" + id + ", cedula=" + cedula + ", nombre=" + nombre + ", apellido=" + apellido
-				+ ", fechaNacimiento=" + fechaNacimiento + ", genero=" + genero + ", registro=" + registro
-				+ ", reserva=" + reserva + "]";
+				+ ", fechaNacimiento=" + fechaNacimiento + ", genero=" + genero + ", registro=" + registro + ", vip="
+				+ vip + ", reserva=" + reserva + "]";
 	}
 
 }

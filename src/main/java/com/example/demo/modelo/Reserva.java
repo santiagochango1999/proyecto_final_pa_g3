@@ -1,15 +1,13 @@
 package com.example.demo.modelo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,16 +16,22 @@ public class Reserva {
 
 	// DATOS
 	@Id
-	@GeneratedValue(generator = "seq_rese", strategy = GenerationType.SEQUENCE)
-	@SequenceGenerator(name = "seq_rese", sequenceName = "seq_rese", allocationSize = 1)
-	@Column(name = "rese_id")
-	private Integer id;
+	@Column(name = "rese_numero")
+	private Integer numero;
 	@Column(name = "rese_valor_subtotal")
 	private BigDecimal valorSubtotal;
 	@Column(name = "rese_valor_iva")
 	private BigDecimal valorIva;
 	@Column(name = "rese_valor_total_pagar")
 	private BigDecimal valorTotalPagar;
+	@Column(name = "rese_estado")
+	private String estado;
+	@Column(name = "rese_tarjeta")
+	private String tarjeta;
+	@Column(name = "rese_fecha_inicio")
+	private LocalDateTime fechaInicio;
+	@Column(name = "rese_fecha_final")
+	private LocalDateTime fechafinal;
 
 	// RELACION
 
@@ -40,10 +44,6 @@ public class Reserva {
 	private Cliente cliente;
 
 	// METODOS GET Y SET
-
-	public Integer getId() {
-		return id;
-	}
 
 	public Vehiculo getVehiculo() {
 		return vehiculo;
@@ -59,10 +59,6 @@ public class Reserva {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public BigDecimal getValorSubtotal() {
@@ -89,12 +85,53 @@ public class Reserva {
 		this.valorTotalPagar = valorTotalPagar;
 	}
 
+	public Integer getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Integer numero) {
+		this.numero = numero;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getTarjeta() {
+		return tarjeta;
+	}
+
+	public void setTarjeta(String tarjeta) {
+		this.tarjeta = tarjeta;
+	}
+
+	public LocalDateTime getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(LocalDateTime fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public LocalDateTime getFechafinal() {
+		return fechafinal;
+	}
+
+	public void setFechafinal(LocalDateTime fechafinal) {
+		this.fechafinal = fechafinal;
+	}
+
 	// TO STRING
 
 	@Override
 	public String toString() {
-		return "Reserva [id=" + id + ", valorSubtotal=" + valorSubtotal + ", valorIva=" + valorIva
-				+ ", valorTotalPagar=" + valorTotalPagar + "]";
+		return "Reserva [numero=" + numero + ", valorSubtotal=" + valorSubtotal + ", valorIva=" + valorIva
+				+ ", valorTotalPagar=" + valorTotalPagar + ", estado=" + estado + ", tarjeta=" + tarjeta
+				+ ", fechaInicio=" + fechaInicio + ", fechafinal=" + fechafinal + "]";
 	}
 
 }

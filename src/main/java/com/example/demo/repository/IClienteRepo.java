@@ -1,12 +1,12 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
 import java.util.List;
 
 import com.example.demo.modelo.Cliente;
 
-public interface IClienteService {
+public interface IClienteRepo {
 
-	public void crear(Cliente cliente);
+	public void insertar(Cliente cliente);
 
 	public Cliente buscarId(Integer id);
 
@@ -18,6 +18,6 @@ public interface IClienteService {
 
 	public Cliente buscarCedula(String cedula);
 
-	public void borrar(Integer id);
+	public void eliminar(Integer id);
 
 }

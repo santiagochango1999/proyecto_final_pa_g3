@@ -1,0 +1,22 @@
+package com.example.demo.service;
+
+import java.util.List;
+
+import com.example.demo.modelo.Vehiculo;
+
+public interface IVehiculoService {
+
+	public void crear(Vehiculo vehiculo);
+
+	public Vehiculo buscarId(Integer id);
+
+	public List<Vehiculo> buscarTodos();
+
+	public void actualizar(Vehiculo vehiculo);
+
+	public void borrar(Integer id);
+	
+	public Vehiculo buscarPlaca(String placa);
+
+	public List<Vehiculo> buscarDispo(String disponibilidad);
+}

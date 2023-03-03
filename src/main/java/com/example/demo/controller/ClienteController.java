@@ -4,14 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.demo.modelo.Empleado;
+import com.example.demo.modelo.Cliente;
 
 @Controller
-@RequestMapping("/empleados")
-public class EmpleadoController {
+@RequestMapping("/clientes")
+public class ClienteController {
 
 	@GetMapping("/nuevaPersona")
-	public String paginaNuevaPersona(Empleado empleado) {
+	public String paginaNuevaPersona(Cliente cliente) {
 		return "vistaPrueba";
 	}
 }
