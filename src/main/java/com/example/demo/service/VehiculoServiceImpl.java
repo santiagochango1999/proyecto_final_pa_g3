@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.modelo.Vehiculo;
+import com.example.demo.modelo.dto.VehiculoDTO;
 import com.example.demo.repository.IVehiculoRepo;
 
 @Service
@@ -54,6 +55,12 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	public Vehiculo buscarPlaca(String placa) {
 		// TODO Auto-generated method stub
 		return this.iVehiculoRepo.buscarPlaca(placa);
+	}
+
+	@Override
+	public List<VehiculoDTO> buscarVehiculoDisponible(String marca, String modelo) {
+		// TODO Auto-generated method stub
+		return this.iVehiculoRepo.buscarVehiculoDisponible(marca, modelo);
 	}
 
 }

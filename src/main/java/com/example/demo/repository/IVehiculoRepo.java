@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.util.List;
 
 import com.example.demo.modelo.Vehiculo;
+import com.example.demo.modelo.dto.VehiculoDTO;
 
 public interface IVehiculoRepo {
 
@@ -19,5 +20,7 @@ public interface IVehiculoRepo {
 	public void borrar(Integer id);
 	
 	public List<Vehiculo> buscarDispo(String disponibilidad);
-
+	
+	public List<VehiculoDTO> buscarVehiculoDisponible(String marca , String modelo);
+	
 }
