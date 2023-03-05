@@ -61,7 +61,7 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 	public List<Vehiculo> buscarDispo(String disponibilidad) {
 
 		TypedQuery<Vehiculo> typedQuery = this.entityManager
-				.createQuery("select v from vehiculo v where v.disponibilidad= :datosDisponibilidad ", Vehiculo.class);
+				.createQuery("select v from Vehiculo v where v.disponibilidad= :datosDisponibilidad ", Vehiculo.class);
 		typedQuery.setParameter("datoDisponibilidad", disponibilidad);
 		List<Vehiculo> lista = typedQuery.getResultList();
 		return lista;
@@ -71,11 +71,12 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 	public Vehiculo buscarPlaca(String placa) {
 		// TODO Auto-generated method stub
 		TypedQuery<Vehiculo> typedQuery = this.entityManager
-				.createQuery("select v from vehiculo v where v.placa= :datosPlaca ", Vehiculo.class);
+				.createQuery("select v from Vehiculo v where v.placa= :datoPlaca ", Vehiculo.class);
 		typedQuery.setParameter("datoPlaca", placa);
 		return typedQuery.getSingleResult();
 	}
 
+	
 	@Override
 	public List<VehiculoDTO> buscarVehiculoDisponible(String marca, String modelo) {
 		// TODO Auto-generated method stub

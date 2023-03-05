@@ -16,4 +16,5 @@ public interface IReservaRepo {
 	public void eliminar(Integer numero);
 	
 	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+	
 }

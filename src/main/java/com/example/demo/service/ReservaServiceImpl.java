@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -32,74 +33,108 @@ public class ReservaServiceImpl implements IReservaService {
 
 	@Autowired
 	private IReservaRepo iReservaRepo;
-	
-	
 
 	@Override
-	public void Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin) {
+	public Boolean Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin) {
 		// TODO Auto-generated method stub
+		Boolean val = true;
+		Boolean devolucion = null;
+		Long range = Long.valueOf(0);
+		Random r = new Random();
+
 		Cliente cliente = this.clienteService.buscarCedula(cedula).get(0);
 		Vehiculo vehiculo = this.VehiculoService.buscarPlaca(placa);
 		Reserva reserva = new Reserva();
+		List<Reserva> list = this.iReservaRepo.buscarReserva();
+
+		vehiculo.setReserva(list);
+
 		List<Reserva> lista = vehiculo.getReserva();
 
-		List<LocalDateTime> listafecha = new ArrayList<>();
-
 		// VALIDACION DE FECHAS
-		Boolean val = null;
 		for (Reserva listare : lista) {
 			val = validacion(inicio, fin, listare);
-			listafecha.add(listare.getFechaInicio());
-			listafecha.add(listare.getFechafinal());
 		}
 
-		List<LocalDateTime> listaOrden = listafecha.stream().sorted().collect(Collectors.toList());
-
 		if (val) {
-			// PRESENTAR VISTA Y REALIZAR BOTON
-			// ingresar tarjeta credito
-			System.out.println("DISPONIBLE");
+			// DISPONIBLE EN FECHA
 			vehiculo.setDisponibilidad("ND");
 			this.VehiculoService.actualizar(vehiculo);
 
-			// numero de dias
-			Long range = ChronoUnit.DAYS.between(reserva.getFechaInicio().toLocalDate(),
-					reserva.getFechafinal().toLocalDate());
+			// NUMERO DE DIAS
+			if (reserva.getFechafinal() != null || reserva.getFechaInicio() != null) {
+				range = ChronoUnit.DAYS.between(reserva.getFechaInicio().toLocalDate(),
+						reserva.getFechafinal().toLocalDate());
+			}
 
+			// INGRESO LOS DATOS
 			reserva.setValorSubtotal(vehiculo.getValorDia().multiply(new BigDecimal(range)));
 			reserva.setValorIva(reserva.getValorSubtotal().multiply(new BigDecimal(0.12)));
 			reserva.setValorTotalPagar(reserva.getValorSubtotal().add(reserva.getValorIva()));
 			reserva.setFechaInicio(inicio);
 			reserva.setFechafinal(fin);
 			reserva.setCliente(cliente);
+			reserva.setVehiculo(vehiculo);
+			// G DE GENERADO LA RESERVA
 			reserva.setEstado("G");
-			reserva.setNumero(5);
+			reserva.setNumero(r.nextInt());
+			list.add(reserva);
 			this.iReservaRepo.ingresar(reserva);
+			vehiculo.setReserva(list);
+			cliente.setReserva(list);
+			this.VehiculoService.actualizar(vehiculo);
+			this.clienteService.actualizar(cliente);
+			devolucion = true;
 
 		} else {
-
-			System.out.println("fechas disponibles");
-
-			for (int i = 1; i <= (listaOrden.size()) / 2; i = i + 2) {
-				System.out.println("desde: " + listaOrden.get(i) + " hasta: " + listaOrden.get(i + 1));
-			}
-
+			// IMPRESION DE FECHAS DISPONIBLES
+			devolucion = false;
 		}
 
+		return devolucion;
+
+	}
+
+	// ORDENAMIENTO DE FECHAS
+	@Override
+	public List<LocalDateTime> oredenamientoFechas(Vehiculo vehiculo) {
+
+		List<Reserva> lista = vehiculo.getReserva();
+		List<LocalDateTime> listafecha = new ArrayList<>();
+		List<LocalDateTime> listafinal = new ArrayList<>();
+
+		// VALIDACION DE FECHAS
+		for (Reserva listare : lista) {
+			listafecha.add(listare.getFechaInicio());
+			listafecha.add(listare.getFechafinal());
+		}
+		List<LocalDateTime> listaOrden = listafecha.stream().sorted().collect(Collectors.toList());
+
+		for (int i = 1; i <= (listaOrden.size()) / 2; i = i + 2) {
+//			System.out.println("desde: " + listaOrden.get(i) + " hasta: " + listaOrden.get(i + 1));
+			listafinal.add(listaOrden.get(i));
+			listafinal.add(listaOrden.get(i + 1));
+		}
+
+		return listafinal;
 	}
 
 	// VALIDACION DE FECHAS
 	public Boolean validacion(LocalDateTime inicio, LocalDateTime fin, Reserva reserva) {
 
-		if ((reserva.getFechaInicio().isBefore(inicio) && reserva.getFechaInicio().isBefore(fin))
-				&& (reserva.getFechafinal().isBefore(inicio) && reserva.getFechafinal().isBefore(fin))
-				|| (reserva.getFechaInicio().isAfter(inicio) && reserva.getFechaInicio().isAfter(fin))
-						&& (reserva.getFechafinal().isAfter(inicio) && reserva.getFechafinal().isAfter(fin))) {
-			return true;
-		} else {
-			return false;
-		}
+		if (reserva.getFechafinal() != null || reserva.getFechaInicio() != null) {
 
+			if ((reserva.getFechaInicio().isBefore(inicio) && reserva.getFechaInicio().isBefore(fin))
+					&& (reserva.getFechafinal().isBefore(inicio) && reserva.getFechafinal().isBefore(fin))
+					|| (reserva.getFechaInicio().isAfter(inicio) && reserva.getFechaInicio().isAfter(fin))
+							&& (reserva.getFechafinal().isAfter(inicio) && reserva.getFechafinal().isAfter(fin))) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	@Override

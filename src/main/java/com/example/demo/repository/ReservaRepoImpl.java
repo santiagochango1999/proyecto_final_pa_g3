@@ -34,7 +34,7 @@ public class ReservaRepoImpl implements IReservaRepo {
 
 	@Override
 	public List<Reserva> buscarReserva() {
-		Query query = this.entityManager.createNativeQuery("select * from reserva");
+		TypedQuery<Reserva> query = this.entityManager.createQuery("select r from Reserva r",Reserva.class);
 		List<Reserva> listaTotal = query.getResultList();
 		return listaTotal;
 	}

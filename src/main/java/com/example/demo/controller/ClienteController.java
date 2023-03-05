@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.modelo.Cliente;
+import com.example.demo.modelo.Reserva;
 import com.example.demo.modelo.Vehiculo;
 import com.example.demo.modelo.dto.VehiculoDTO;
 import com.example.demo.modelo.dto.VehiculoMyMDTO;
 import com.example.demo.service.IClienteService;
+import com.example.demo.service.IReservaService;
 import com.example.demo.service.IVehiculoService;
 
 @Controller
@@ -30,6 +32,9 @@ public class ClienteController {
 	@Autowired
 	private IVehiculoService iVehiculoService;
 
+	@Autowired
+	private IReservaService iReservaService;
+
 	@GetMapping("/funciones")
 	public String paginaVistaCliente() {
 		return "vistaCliCliente";
@@ -40,11 +45,6 @@ public class ClienteController {
 		List<VehiculoMyMDTO> lista = this.iVehiculoService.buscarTodos();
 		model.addAttribute("vehiculomymdto", lista);
 		return "vistaCliListaMYMY";
-	}
-
-	@GetMapping("/reservaVehiculo")
-	public String paginaVistaReservaVehiculo() {
-		return "vistaCliReservaCliente";
 	}
 
 	@GetMapping("/registrarCliente")
@@ -90,7 +90,7 @@ public class ClienteController {
 
 	@PutMapping("/actualizar")
 	public String actualizarPorCedula(Cliente cliente) {
-		Cliente cliente2=this.clienteService.buscarCedula(datocedula).get(0);
+		Cliente cliente2 = this.clienteService.buscarCedula(datocedula).get(0);
 		cliente.setId(cliente2.getId());
 		cliente.setCedula(datocedula);
 		cliente.setRegistro(cliente2.getRegistro());
@@ -98,6 +98,27 @@ public class ClienteController {
 		System.out.println(cliente);
 		this.clienteService.actualizar(cliente);
 		return "redirect:/clientes/funciones";
+	}
+
+	// RESERVA-----------------------------
+	@GetMapping("/reservaVehiculo")
+	public String paginaVistaReservaVehiculo(Vehiculo vehiculo, Cliente cliente, Reserva reserva) {
+		return "vistaCliReservaCliente";
+	}
+
+	@GetMapping("/buscarReserva")
+	public String paginaVistaRetornoDisponibilidad(Vehiculo vehiculo, Cliente cliente, Reserva reserva) {
+		String pagina;
+		Boolean val;
+
+		val = this.iReservaService.Reservar(vehiculo.getPlaca(), cliente.getCedula(), reserva.getFechaInicio(),
+				reserva.getFechafinal());
+		if (val) {
+			pagina = "vistaCliFechaSi";
+		} else {
+			pagina = "vistaCliFechaNo";
+		}
+		return pagina;
 	}
 
 }

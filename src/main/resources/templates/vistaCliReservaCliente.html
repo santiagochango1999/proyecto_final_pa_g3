@@ -8,7 +8,54 @@
 </head>
 
 <body>   
-	PRUEBA UNOdsadasd
+	<form th:action="@{/clientes/buscarReserva}" th:object="${vehiculo}" "${cliente}" "${reserva}" th:method="GET">
+		<table style="margin: 0 auto;">
+			<tr>
+				<td>
+					<label>Placa:</label>
+
+				</td>
+				<td>
+					<input type="text" id="placa" th:field="${vehiculo.placa}">
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label>Cedula:</label>
+
+				</td>
+				<td>
+					<input type="text" id="cedula" th:field="${cliente.cedula}">
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label>Fecha Inicio:</label>
+
+				</td>
+				<td>
+					<input type="datetime-local" id="fechaInicio" th:field="${reserva.fechaInicio}">
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<label>Fecha Fin:</label>
+
+				</td>
+				<td>
+					<input type="datetime-local" id="fechafinal" th:field="${reserva.fechafinal}">
+				</td>
+			</tr>
+
+		</table>
+
+		<div style="text-align:center;">
+			<input type="submit" value="Crear">
+		</div>
+	</form>
 </body>
 
 </html>
