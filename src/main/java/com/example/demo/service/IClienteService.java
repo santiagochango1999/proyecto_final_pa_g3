@@ -16,7 +16,7 @@ public interface IClienteService {
 
 	public List<Cliente> buscarApellido(String apellido);
 
-	public Cliente buscarCedula(String cedula);
+	public List<Cliente> buscarCedula(String cedula);
 
 	public void borrar(Integer id);
 

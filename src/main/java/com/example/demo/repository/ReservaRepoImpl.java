@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import com.example.demo.modelo.Reserva;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -42,6 +44,18 @@ public class ReservaRepoImpl implements IReservaRepo {
 		// TODO Auto-generated method stub
 		Reserva reserva = this.buscarNumero(numero);
 		this.entityManager.remove(reserva);
+	}
+
+	@Override
+	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+		// TODO Auto-generated method stub
+		TypedQuery<Reserva> myQuery = this.entityManager.createQuery(
+				"select e from Reserva e where e.fechaInicio>= :datoFechaInicio AND e.fechafinal<= :datoFechaFin",
+				Reserva.class);
+		myQuery.setParameter("datoFechaInicio", fechaInicio);
+		myQuery.setParameter("datoFechaFin", fechaFin);
+		List<Reserva> reservas = myQuery.getResultList();
+		return reservas;
 	}
 
 }

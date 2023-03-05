@@ -1,10 +1,15 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.modelo.Cliente;
@@ -15,6 +20,8 @@ import com.example.demo.service.IVehiculoService;
 @Controller
 @RequestMapping("/empleado")
 public class EmpleadoController {
+	private String marca;
+	private String apellido;
 	
 	@Autowired
 	private IClienteService iClienteService;
@@ -24,52 +31,94 @@ public class EmpleadoController {
 	//Funcionando
 	@GetMapping("/funciones")
 	public String paginaNuevaPersona() {
-		return "vistaFuncionesEmpleado";
+		return "vistaEmplFunciones";
 	}
-	
-	@GetMapping("/nuevoVehiculo")
-	public String paginaNuevoVehiculo(Vehiculo vehiculo) {
-		return "vistaNuevoVehiculo";
-	}
-	@PostMapping("/insertarVehiculo")
-	public String pruebaInsertarVehiculo(Vehiculo vehiculo) {
-		this.iVehiculoService.crear(vehiculo);
-		return "vistaPrueba";
-		
-	}
-	//Probando
-	@GetMapping("/nuevoCliente")
-	public String paginaNuevoCliente(Cliente cliente) {
-		return "vistaNuevoCliente";
-	}
-	
+	//	2a
 	@PostMapping("/insertar")
 	public String pruebaInsertar(Cliente cliente) {
 		cliente.setRegistro("E");
 		cliente.setVip("V");
 		this.iClienteService.crear(cliente);
-		return "vistaPrueba";
+		return "vistaEmplConfirmacion";
+	}
+	@GetMapping("/nuevoCliente")
+	public String paginaNuevoCliente(Cliente cliente) {
+		return "vistaEmplNuevoCliente";
+	}
+	//2b
+	@GetMapping("/ingresarApellido")
+	public String ingresoApellido(Cliente cliente) {
+		return "vistaEmplIngresarApellido";
+	}
+	@GetMapping("/buscarPorApellido")
+	public String buscarApellido(Cliente cliente, Model modelo) {
+		if(cliente.getApellido()!=null) {
+			this.apellido=cliente.getApellido();
+		}
+		List<Cliente> lista=this.iClienteService.buscarApellido(this.apellido);
+		modelo.addAttribute("clientes",lista);
+		return "vistaEmplListaClientes";
+	}
+	@GetMapping("/buscarPorIdApellido/{id}")
+	public String buscarPorIdApellido(@PathVariable("id") Integer id,Model modelo) {
+		Cliente cliente=this. iClienteService.buscarId(id);
+		modelo.addAttribute("cliente",cliente);
+		return "vistaEmplCliente";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@PutMapping("/actualizarCliente/{id}")
+	public String actualizarEmpleadoCliente(@PathVariable("id")Integer id ,Cliente cliente) {
+		cliente.setId(id);
+		this.iClienteService.actualizar(cliente);
+		return "redirect:/empleado/buscarPorApellido";
+	}
+	@DeleteMapping("/borrarClienteApellido/{id}")
+	public String borrarEmpleadoCliente(@PathVariable("id") Integer id) {
+		this.iClienteService.borrar(id);
+		return "redirect:/empleado/buscarPorApellido";
+	}
 
-	@GetMapping("/buscar")
-	public String regresar(Cliente cliente) {
-		
-		return "vistaPrueba";
+	//2c
+	@GetMapping("/nuevoVehiculo")
+	public String paginaNuevoVehiculo(Vehiculo vehiculo) {
+		return "vistaEmplNuevoVehiculo";
 	}
-	@GetMapping("/actualizar{id}")
-	public String actualizar(@PathVariable("id")Integer id ,Cliente cliente) {
-		
-		return "vistaPrueba";
+	@PostMapping("/insertarVehiculo")
+	public String pruebaInsertarVehiculo(Vehiculo vehiculo) {
+		this.iVehiculoService.crear(vehiculo);
+		return "vistaEmplConfirmacion";
 	}
+	//2d
+	@GetMapping("/ingresarMarca")
+	public String ingresoMarca(Vehiculo vehiculo) {
+		return "vistaEmplIngresarMarca";
+	}
+	@GetMapping("/buscarPorMarca")
+	public String buscarMarca(Vehiculo vehiculo, Model modelo) {
+		if(vehiculo.getMarca()!=null) {
+			this.marca=vehiculo.getMarca();
+		}
+		List<Vehiculo> lista=this.iVehiculoService.buscarMarca(this.marca);
+		modelo.addAttribute("vehiculos",lista);
+		return "vistaEmplListaVehiculo";
+	}
+	@GetMapping("/buscarPorId/{id}")
+	public String buscarPorId(@PathVariable("id") Integer id,Model modelo) {
+		Vehiculo vehiculo=this. iVehiculoService.buscarId(id);
+		modelo.addAttribute("vehiculo",vehiculo);
+		return "vistaEmplVehiculo";
+	}
+	
+	@PutMapping("/actualizar/{id}")
+	public String actualizarEmpleadoVehiculo(@PathVariable("id")Integer id ,Vehiculo vehiculo) {
+		vehiculo.setId(id);
+		this.iVehiculoService.actualizar(vehiculo);
+		return "redirect:/empleado/buscarPorMarca";
+	}
+	@DeleteMapping("/borrar/{id}")
+	public String borrarEmpleadoVehiculo(@PathVariable("id") Integer id) {
+		this.iVehiculoService.borrar(id);
+		return "redirect:/empleado/buscarPorMarca";
+	}
+	//2e
 }

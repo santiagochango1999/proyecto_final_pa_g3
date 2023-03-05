@@ -12,7 +12,7 @@ public class PrincipalController {
 
 	@GetMapping("/boton")
 	public String paginaVistaPrincipal() {
-		return "vistaPrincipal";
+		return "vistaCliPrincipal";
 	}
 
 	

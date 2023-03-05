@@ -10,7 +10,7 @@ public class VehiculoDTO {
 	
 	private String marca;
 
-	private Integer añoFabricion;
+	private Integer anioFabricion;
 	
 	private String disponibilidad;
 
@@ -22,13 +22,13 @@ public class VehiculoDTO {
 		
 	}
 
-	public VehiculoDTO(String placa, String modelo, String marca, Integer añoFabricion, String disponibilidad,
+	public VehiculoDTO(String placa, String modelo, String marca, Integer anioFabricion, String disponibilidad,
 			BigDecimal valorDia) {
 		super();
 		this.placa = placa;
 		this.modelo = modelo;
 		this.marca = marca;
-		this.añoFabricion = añoFabricion;
+		this.anioFabricion = anioFabricion;
 		this.disponibilidad = disponibilidad;
 		this.valorDia = valorDia;
 		
@@ -59,12 +59,14 @@ public class VehiculoDTO {
 		this.marca = marca;
 	}
 
-	public Integer getAñoFabricion() {
-		return añoFabricion;
+	
+
+	public Integer getAnioFabricion() {
+		return anioFabricion;
 	}
 
-	public void setAñoFabricion(Integer añoFabricion) {
-		this.añoFabricion = añoFabricion;
+	public void setAnioFabricion(Integer anioFabricion) {
+		this.anioFabricion = anioFabricion;
 	}
 
 	public String getDisponibilidad() {
@@ -86,7 +88,7 @@ public class VehiculoDTO {
 	@Override
 	public String toString() {
 		return "VehiculoDTO [placa=" + placa + ", modelo=" + modelo + ", marca=" + marca + ", añoFabricion="
-				+ añoFabricion + ", disponibilidad=" + disponibilidad + ", valorDia=" + valorDia + "]";
+				+ anioFabricion + ", disponibilidad=" + disponibilidad + ", valorDia=" + valorDia + "]";
 	}
 	
 	

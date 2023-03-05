@@ -10,17 +10,16 @@
 </head>
 
 <body>
-	<tr>
-		<form th:action="@{/empleado/nuevoCliente}">  
-			<button class="btn btn-primary" type="submit">Cliente</button>
-		</form>
-</tr>
+	<form th:action="@{/clientes/funciones}">  
+		<button class="btn btn-primary" type="submit">Cliente</button>
+	</form>
 	
 	<form th:action="@{/empleado/funciones}">  
-		<button class="btn btn-primary" type="submit">Empleado</button>
+		<button class="btn btn-secondary" type="submit">Empleado</button>
 	</form>
-	<form th:action="@{/empleado/funciones}">  
-		<button class="btn btn-primary" type="submit">Reserva</button>
+	
+	<form th:action="@{/principal/reservas}">  
+		<button class="btn btn-secondary" type="submit">Reserva</button>
 	</form>
 	 
 </body>

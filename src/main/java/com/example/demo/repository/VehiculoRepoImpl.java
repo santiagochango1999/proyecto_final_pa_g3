@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.modelo.Cliente;
 import com.example.demo.modelo.Vehiculo;
 import com.example.demo.modelo.dto.VehiculoDTO;
+import com.example.demo.modelo.dto.VehiculoMyMDTO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -34,12 +35,13 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 	}
 
 	@Override
-	public List<Vehiculo> buscarTodos() {
+	public List<VehiculoMyMDTO> buscarTodos() {
 
-		Query query = this.entityManager.createNativeQuery("select * from vehiculo");
-		List<Vehiculo> listaTotal = query.getResultList();
+		TypedQuery<VehiculoMyMDTO> query = this.entityManager.createQuery(
+				"SELECT NEW com.example.demo.modelo.dto.VehiculoMyMDTO(v.modelo , v.marca) FROM Vehiculo v ",
+				VehiculoMyMDTO.class);
 
-		return listaTotal;
+		return query.getResultList();
 	}
 
 	@Override
@@ -78,12 +80,21 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 	public List<VehiculoDTO> buscarVehiculoDisponible(String marca, String modelo) {
 		// TODO Auto-generated method stub
 		TypedQuery<VehiculoDTO> query = this.entityManager.createQuery(
-				"SELECT NEW com.example.demo.modelo.dto.VehiculoDTO(v.placa , v.modelo , v.marca , v.añoFabricion , v.disponibilidad , v.valorDia)"
+				"SELECT NEW com.example.demo.modelo.dto.VehiculoDTO(v.placa , v.modelo , v.marca , v.anioFabricion , v.disponibilidad , v.valorDia)"
 						+ "FROM Vehiculo v WHERE v.marca =:datoMarca AND v.modelo =:datoModelo",
 				VehiculoDTO.class);
 		query.setParameter("datoMarca", marca);
 		query.setParameter("datoModelo", modelo);
 		return query.getResultList();
+	}
+
+	@Override
+	public List<Vehiculo> buscarMarca(String marca) {
+		Query query = this.entityManager.createNativeQuery("select * from Vehiculo v where v.vehi_marca=:datoMarca",
+				Vehiculo.class);
+		query.setParameter("datoMarca", marca);
+		List<Vehiculo> listaMarca = query.getResultList();
+		return listaMarca;
 	}
 
 }

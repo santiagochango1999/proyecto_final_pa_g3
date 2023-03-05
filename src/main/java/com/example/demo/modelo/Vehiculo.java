@@ -28,8 +28,8 @@ public class Vehiculo {
 	private String modelo;
 	@Column(name = "vehi_marca")
 	private String marca;
-	@Column(name = "vehi_año_fabricacion")
-	private Integer añoFabricion;
+	@Column(name = "vehi_anio_fabricacion")
+	private Integer anioFabricion;
 	@Column(name = "vehi_pais_fabricacion")
 	private String paisFabricion;
 	@Column(name = "vehi_cilindraje")
@@ -50,6 +50,14 @@ public class Vehiculo {
 
 	public Integer getId() {
 		return id;
+	}
+
+	public Integer getAnioFabricion() {
+		return anioFabricion;
+	}
+
+	public void setAnioFabricion(Integer anioFabricion) {
+		this.anioFabricion = anioFabricion;
 	}
 
 	public List<Reserva> getReserva() {
@@ -86,14 +94,6 @@ public class Vehiculo {
 
 	public void setMarca(String marca) {
 		this.marca = marca;
-	}
-
-	public Integer getAñoFabricion() {
-		return añoFabricion;
-	}
-
-	public void setAñoFabricion(Integer añoFabricion) {
-		this.añoFabricion = añoFabricion;
 	}
 
 	public String getPaisFabricion() {
@@ -136,13 +136,13 @@ public class Vehiculo {
 		this.disponibilidad = disponibilidad;
 	}
 
-	// TO STRING
 	@Override
 	public String toString() {
-		return "Vehiculo [id=" + id + ", placa=" + placa + ", modelo=" + modelo + ", marca=" + marca + ", añoFabricion="
-				+ añoFabricion + ", paisFabricion=" + paisFabricion + ", cilindraje=" + cilindraje + ", precio="
-				+ precio + ", valorDia=" + valorDia + ", disponibilidad=" + disponibilidad + ", reserva=" + reserva
-				+ "]";
+		return "Vehiculo [id=" + id + ", placa=" + placa + ", modelo=" + modelo + ", marca=" + marca
+				+ ", anioFabricion=" + anioFabricion + ", paisFabricion=" + paisFabricion + ", cilindraje=" + cilindraje
+				+ ", precio=" + precio + ", valorDia=" + valorDia + ", disponibilidad=" + disponibilidad + "]";
 	}
+
+	// TO STRING
 
 }

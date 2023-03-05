@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.modelo.Vehiculo;
 import com.example.demo.modelo.dto.VehiculoDTO;
+import com.example.demo.modelo.dto.VehiculoMyMDTO;
 
 public interface IVehiculoRepo {
 
@@ -11,7 +12,7 @@ public interface IVehiculoRepo {
 
 	public Vehiculo buscarId(Integer id);
 
-	public List<Vehiculo> buscarTodos();
+	public List<VehiculoMyMDTO> buscarTodos();
 	
 	public Vehiculo buscarPlaca(String placa);
 
@@ -22,5 +23,7 @@ public interface IVehiculoRepo {
 	public List<Vehiculo> buscarDispo(String disponibilidad);
 	
 	public List<VehiculoDTO> buscarVehiculoDisponible(String marca , String modelo);
+	
+	 public List<Vehiculo> buscarMarca(String marca);
 	
 }

@@ -10,18 +10,18 @@
 </head>
 
 <body>
-
+	
 	<form th:action="@{/empleado/nuevoCliente}">
-		<button class="btn btn-secondary" type="submit">Registrar cliente</button>
+		<button class="btn btn-secondary" type="submit"> Registrar cliente</button>
 	</form>
-	<form th:action="@{/empleado/nuevoCliente}">  
+	<form th:action="@{/empleado/ingresarApellido}">  
 		<button class="btn btn-secondary" type="submit">Buscar cliente</button>
 	</form>
 	<form th:action="@{/empleado/nuevoVehiculo}">  
 		<button class="btn btn-secondary" type="submit">Ingresar vehiculo</button>
 	</form>
-	<form th:action="@{/principal/reserva}">  
-		<button class="btn btn-secondary" type="submit">Buscar vehiculo</button>
+	<form th:action="@{/empleado/ingresarMarca}">
+		<button class="btn btn-secondary" type="submit"> Buscar vehiculo</button>
 	</form>
 	<form th:action="@{/principal/reserva}">  
 		<button class="btn btn-secondary" type="submit">Retirar vehiculo reservado</button>
@@ -29,7 +29,6 @@
 	<form th:action="@{/principal/reserva}">  
 		<button class="btn btn-secondary" type="submit">Retirar vehiculo sin reserva</button>
 	</form>
-	 
 </body>
 
 </html>

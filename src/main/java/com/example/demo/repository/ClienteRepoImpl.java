@@ -62,11 +62,11 @@ public class ClienteRepoImpl implements IClienteRepo {
 	}
 
 	@Override
-	public Cliente buscarCedula(String cedula) {
+	public List<Cliente> buscarCedula(String cedula) {
 
 		Query query = this.entityManager.createQuery("select c from Cliente c where c.cedula= :datoCedula");
 		query.setParameter("datoCedula", cedula);
-		return (Cliente) query.getSingleResult();
+		return  query.getResultList();
 	}
 
 }

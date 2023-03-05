@@ -51,7 +51,7 @@ public class ClienteServiceImpl implements IClienteService {
 	}
 
 	@Override
-	public Cliente buscarCedula(String cedula) {
+	public List<Cliente> buscarCedula(String cedula) {
 		// TODO Auto-generated method stub
 		return this.clienteRepo.buscarCedula(cedula);
 	}

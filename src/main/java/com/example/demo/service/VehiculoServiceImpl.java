@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.modelo.Vehiculo;
 import com.example.demo.modelo.dto.VehiculoDTO;
+import com.example.demo.modelo.dto.VehiculoMyMDTO;
 import com.example.demo.repository.IVehiculoRepo;
 
 @Service
@@ -28,7 +29,7 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	}
 
 	@Override
-	public List<Vehiculo> buscarTodos() {
+	public List<VehiculoMyMDTO> buscarTodos() {
 		// TODO Auto-generated method stub
 		return this.iVehiculoRepo.buscarTodos();
 	}
@@ -61,6 +62,12 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	public List<VehiculoDTO> buscarVehiculoDisponible(String marca, String modelo) {
 		// TODO Auto-generated method stub
 		return this.iVehiculoRepo.buscarVehiculoDisponible(marca, modelo);
+	}
+
+	@Override
+	public List<Vehiculo> buscarMarca(String marca) {
+		// TODO Auto-generated method stub
+		return this.iVehiculoRepo.buscarMarca(marca);
 	}
 
 }

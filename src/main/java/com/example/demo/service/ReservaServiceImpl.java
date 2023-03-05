@@ -32,11 +32,13 @@ public class ReservaServiceImpl implements IReservaService {
 
 	@Autowired
 	private IReservaRepo iReservaRepo;
+	
+	
 
 	@Override
-	public void Reserva(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin) {
+	public void Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin) {
 		// TODO Auto-generated method stub
-		Cliente cliente = this.clienteService.buscarCedula(cedula);
+		Cliente cliente = this.clienteService.buscarCedula(cedula).get(0);
 		Vehiculo vehiculo = this.VehiculoService.buscarPlaca(placa);
 		Reserva reserva = new Reserva();
 		List<Reserva> lista = vehiculo.getReserva();
@@ -104,6 +106,12 @@ public class ReservaServiceImpl implements IReservaService {
 	public void Retirar(String tipoRetiro) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+		// TODO Auto-generated method stub
+		return this.iReservaRepo.buscarPorRangoDeFechas(fechaInicio, fechaFin);
 	}
 
 }

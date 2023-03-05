@@ -9,14 +9,14 @@ public interface IClienteRepo {
 	public void insertar(Cliente cliente);
 
 	public Cliente buscarId(Integer id);
-
+	
 	public void actualizar(Cliente cliente);
 
 	public List<Cliente> buscarTodos();
 
 	public List<Cliente> buscarApellido(String apellido);
 
-	public Cliente buscarCedula(String cedula);
+	public List<Cliente> buscarCedula(String cedula);
 
 	public void eliminar(Integer id);
 
