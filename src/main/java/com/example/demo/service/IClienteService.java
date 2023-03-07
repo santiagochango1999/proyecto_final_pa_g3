@@ -19,5 +19,7 @@ public interface IClienteService {
 	public List<Cliente> buscarCedula(String cedula);
 
 	public void borrar(Integer id);
+	
+	public Boolean validacionCedula(List<Cliente> clientes,String cedula);
 
 }

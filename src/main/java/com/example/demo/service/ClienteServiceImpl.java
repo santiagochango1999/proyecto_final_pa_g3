@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.modelo.Cliente;
+import com.example.demo.modelo.Vehiculo;
 import com.example.demo.repository.IClienteRepo;
 
 @Service
@@ -54,6 +55,19 @@ public class ClienteServiceImpl implements IClienteService {
 	public List<Cliente> buscarCedula(String cedula) {
 		// TODO Auto-generated method stub
 		return this.clienteRepo.buscarCedula(cedula);
+	}
+
+	@Override
+	public Boolean validacionCedula(List<Cliente> clientes, String cedula) {
+		Boolean val=false;
+		for (Cliente cliente : clientes) {
+			if(cedula.equals(cliente.getCedula())) {
+				val=true;
+			}else {
+				val=false;
+			}
+		}
+		return val;
 	}
 
 }

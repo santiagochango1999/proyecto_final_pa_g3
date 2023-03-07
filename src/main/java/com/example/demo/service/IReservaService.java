@@ -8,12 +8,20 @@ import com.example.demo.modelo.Vehiculo;
 
 public interface IReservaService {
 
-	public Boolean Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin);
+	public List<Reserva> Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin);
 
 	public void Retirar(String tipoRetiro);
-	
+
 	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin);
-	
-	public List<LocalDateTime> oredenamientoFechas(Vehiculo vehiculo);
+
+	public List<Reserva> ordenarFechas(List<Reserva> reserva, String inicio);
+
+	public Boolean validacion(LocalDateTime inicio, LocalDateTime fin, List<Reserva> reserva);
+
+	public List<Reserva> buscarReserva();
+
+	public Reserva buscarNumero(Integer numero);
+
+	public void crear(Reserva reserva);
 
 }

@@ -35,6 +35,12 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	}
 
 	@Override
+	public List<Vehiculo> buscarParaValidar() {
+		// TODO Auto-generated method stub
+		return this.iVehiculoRepo.buscarParaValidar();
+	}
+
+	@Override
 	public void actualizar(Vehiculo vehiculo) {
 		// TODO Auto-generated method stub
 		this.iVehiculoRepo.actualizar(vehiculo);
@@ -68,6 +74,20 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	public List<Vehiculo> buscarMarca(String marca) {
 		// TODO Auto-generated method stub
 		return this.iVehiculoRepo.buscarMarca(marca);
+	}
+
+	@Override
+	public Boolean validacionPlaca(List<Vehiculo> vehiculos, String placa) {
+		// TODO Auto-generated method stub
+		Boolean val=false;
+		for (Vehiculo vehiculo : vehiculos) {
+			if(placa.equals(vehiculo.getPlaca())) {
+				val=true;
+			}else {
+				val=false;
+			}
+		}
+		return val;
 	}
 
 }

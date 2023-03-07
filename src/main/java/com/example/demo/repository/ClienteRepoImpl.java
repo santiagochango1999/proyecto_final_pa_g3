@@ -9,6 +9,7 @@ import com.example.demo.modelo.Cliente;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -39,7 +40,7 @@ public class ClienteRepoImpl implements IClienteRepo {
 	@Override
 	public List<Cliente> buscarTodos() {
 
-		Query query = this.entityManager.createNativeQuery("select * from cliente");
+		TypedQuery<Cliente> query = this.entityManager.createQuery("select c from Cliente c",Cliente.class);
 		List<Cliente> listaTotal = query.getResultList();
 
 		return listaTotal;

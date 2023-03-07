@@ -35,11 +35,11 @@ public class ReservaServiceImpl implements IReservaService {
 	private IReservaRepo iReservaRepo;
 
 	@Override
-	public Boolean Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin) {
+	public List<Reserva> Reservar(String placa, String cedula, LocalDateTime inicio, LocalDateTime fin) {
 		// TODO Auto-generated method stub
 		Boolean val = true;
 		Boolean devolucion = null;
-		Long range = Long.valueOf(0);
+		Long range = null;
 		Random r = new Random();
 
 		Cliente cliente = this.clienteService.buscarCedula(cedula).get(0);
@@ -47,94 +47,90 @@ public class ReservaServiceImpl implements IReservaService {
 		Reserva reserva = new Reserva();
 		List<Reserva> list = this.iReservaRepo.buscarReserva();
 
-		vehiculo.setReserva(list);
-
-		List<Reserva> lista = vehiculo.getReserva();
-
-		// VALIDACION DE FECHAS
-		for (Reserva listare : lista) {
-			val = validacion(inicio, fin, listare);
-		}
+		val = validacion(inicio, fin, list);
 
 		if (val) {
-			// DISPONIBLE EN FECHA
-			vehiculo.setDisponibilidad("ND");
-			this.VehiculoService.actualizar(vehiculo);
-
 			// NUMERO DE DIAS
-			if (reserva.getFechafinal() != null || reserva.getFechaInicio() != null) {
-				range = ChronoUnit.DAYS.between(reserva.getFechaInicio().toLocalDate(),
-						reserva.getFechafinal().toLocalDate());
+			if (inicio != null || fin != null) {
+				range = ChronoUnit.DAYS.between(inicio.toLocalDate(), fin.toLocalDate());
 			}
 
 			// INGRESO LOS DATOS
 			reserva.setValorSubtotal(vehiculo.getValorDia().multiply(new BigDecimal(range)));
-			reserva.setValorIva(reserva.getValorSubtotal().multiply(new BigDecimal(0.12)));
+			reserva.setValorIva((reserva.getValorSubtotal().multiply(new BigDecimal(12))).divide(new BigDecimal(100)));
 			reserva.setValorTotalPagar(reserva.getValorSubtotal().add(reserva.getValorIva()));
 			reserva.setFechaInicio(inicio);
 			reserva.setFechafinal(fin);
 			reserva.setCliente(cliente);
 			reserva.setVehiculo(vehiculo);
 			// G DE GENERADO LA RESERVA
-			reserva.setEstado("G");
 			reserva.setNumero(r.nextInt());
+
 			list.add(reserva);
-			this.iReservaRepo.ingresar(reserva);
-			vehiculo.setReserva(list);
-			cliente.setReserva(list);
-			this.VehiculoService.actualizar(vehiculo);
-			this.clienteService.actualizar(cliente);
-			devolucion = true;
 
-		} else {
-			// IMPRESION DE FECHAS DISPONIBLES
-			devolucion = false;
 		}
-
-		return devolucion;
-
+		return list;
 	}
 
 	// ORDENAMIENTO DE FECHAS
+//	@Override
+//	public List<LocalDateTime> oredenamientoFechas(Vehiculo vehiculo) {
+//
+//		List<Reserva> lista = vehiculo.getReserva();
+//		List<LocalDateTime> listafecha = new ArrayList<>();
+//		List<LocalDateTime> listafinal = new ArrayList<>();
+//
+//		// VALIDACION DE FECHAS
+//		for (Reserva listare : lista) {
+//			listafecha.add(listare.getFechaInicio());
+//			listafecha.add(listare.getFechafinal());
+//		}
+//		List<LocalDateTime> listaOrden = listafecha.stream().sorted().collect(Collectors.toList());
+////
+////		for (int i = 1; i <= (listaOrden.size()) / 2; i = i + 2) {
+//////			System.out.println("desde: " + listaOrden.get(i) + " hasta: " + listaOrden.get(i + 1));
+////			listafinal.add(listaOrden.get(i));
+////			listafinal.add(listaOrden.get(i + 1));
+////		}
+//
+//		return listaOrden;
+//	}
+
 	@Override
-	public List<LocalDateTime> oredenamientoFechas(Vehiculo vehiculo) {
-
-		List<Reserva> lista = vehiculo.getReserva();
-		List<LocalDateTime> listafecha = new ArrayList<>();
-		List<LocalDateTime> listafinal = new ArrayList<>();
-
-		// VALIDACION DE FECHAS
-		for (Reserva listare : lista) {
-			listafecha.add(listare.getFechaInicio());
-			listafecha.add(listare.getFechafinal());
+	public List<Reserva> ordenarFechas(List<Reserva> reserva, String inicio) {
+		List<Reserva> reservas;
+		if (inicio.equals("inicio")) {
+			reservas = reserva.stream().sorted(Comparator.comparing(Reserva::getFechaInicio))
+					.collect(Collectors.toList());
+		} else {
+			reservas = reserva.stream().sorted(Comparator.comparing(Reserva::getFechafinal))
+					.collect(Collectors.toList());
 		}
-		List<LocalDateTime> listaOrden = listafecha.stream().sorted().collect(Collectors.toList());
-
-		for (int i = 1; i <= (listaOrden.size()) / 2; i = i + 2) {
-//			System.out.println("desde: " + listaOrden.get(i) + " hasta: " + listaOrden.get(i + 1));
-			listafinal.add(listaOrden.get(i));
-			listafinal.add(listaOrden.get(i + 1));
-		}
-
-		return listafinal;
+		return reservas;
 	}
 
 	// VALIDACION DE FECHAS
-	public Boolean validacion(LocalDateTime inicio, LocalDateTime fin, Reserva reserva) {
+	public Boolean validacion(LocalDateTime inicio, LocalDateTime fin, List<Reserva> reserva) {
 
-		if (reserva.getFechafinal() != null || reserva.getFechaInicio() != null) {
+		Boolean val = null;
+		for (Reserva r : reserva) {
+			if (r.getFechafinal() != null && r.getFechaInicio() != null) {
 
-			if ((reserva.getFechaInicio().isBefore(inicio) && reserva.getFechaInicio().isBefore(fin))
-					&& (reserva.getFechafinal().isBefore(inicio) && reserva.getFechafinal().isBefore(fin))
-					|| (reserva.getFechaInicio().isAfter(inicio) && reserva.getFechaInicio().isAfter(fin))
-							&& (reserva.getFechafinal().isAfter(inicio) && reserva.getFechafinal().isAfter(fin))) {
-				return true;
-			} else {
-				return false;
+				if ((r.getFechaInicio().isBefore(inicio) && r.getFechaInicio().isBefore(fin))
+						&& (r.getFechafinal().isBefore(inicio) && r.getFechafinal().isBefore(fin))
+						|| (r.getFechaInicio().isAfter(inicio) && r.getFechaInicio().isAfter(fin))
+								&& (r.getFechafinal().isAfter(inicio) && r.getFechafinal().isAfter(fin))) {
+					val = true;
+				} else {
+					val = false;
+					break;
+				}
 			}
-		} else {
-			return true;
+			val = true;
 		}
+
+		return val;
+
 	}
 
 	@Override
@@ -147,6 +143,24 @@ public class ReservaServiceImpl implements IReservaService {
 	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
 		// TODO Auto-generated method stub
 		return this.iReservaRepo.buscarPorRangoDeFechas(fechaInicio, fechaFin);
+	}
+
+	@Override
+	public List<Reserva> buscarReserva() {
+		// TODO Auto-generated method stub
+		return this.iReservaRepo.buscarReserva();
+	}
+
+	@Override
+	public Reserva buscarNumero(Integer numero) {
+		// TODO Auto-generated method stub
+		return this.iReservaRepo.buscarNumero(numero);
+	}
+
+	@Override
+	public void crear(Reserva reserva) {
+		// TODO Auto-generated method stub
+		this.iReservaRepo.ingresar(reserva);
 	}
 
 }

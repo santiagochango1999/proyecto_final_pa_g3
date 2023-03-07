@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ import com.example.demo.service.IVehiculoService;
 public class ClienteController {
 
 	private String datocedula;
+	private Cliente cliente;
+	private Vehiculo vehiculo;
+	private List<Reserva> listaRs;
 
 	@Autowired
 	private IClienteService clienteService;
@@ -107,18 +111,70 @@ public class ClienteController {
 	}
 
 	@GetMapping("/buscarReserva")
-	public String paginaVistaRetornoDisponibilidad(Vehiculo vehiculo, Cliente cliente, Reserva reserva) {
+	public String paginaVistaRetornoDisponibilidad(Vehiculo vehiculo, Cliente cliente, Reserva reserva, Model model) {
 		String pagina;
-		Boolean val;
+		List<Reserva> lista;
+		BigDecimal val;
 
-		val = this.iReservaService.Reservar(vehiculo.getPlaca(), cliente.getCedula(), reserva.getFechaInicio(),
-				reserva.getFechafinal());
-		if (val) {
-			pagina = "vistaCliFechaSi";
+		// BOOLEAN PARA DEVOLUCION DE LA VALIDACION
+		Boolean valplaca = this.iVehiculoService.validacionPlaca(this.iVehiculoService.buscarParaValidar(),
+				vehiculo.getPlaca());
+		Boolean valcliente = this.clienteService.validacionCedula(this.clienteService.buscarTodos(),
+				cliente.getCedula());
+
+		// VALIDAMOS LAS FECHAS
+		Boolean valfechas = this.iReservaService.validacion(reserva.getFechaInicio(), reserva.getFechafinal(),
+				this.iReservaService.buscarReserva());
+
+		if (valplaca.equals(true) && valcliente.equals(true)) {
+			if (valfechas) {
+				lista = this.iReservaService.Reservar(vehiculo.getPlaca(), cliente.getCedula(),
+						reserva.getFechaInicio(), reserva.getFechafinal());
+				// GUARDAMOS DATOS PARA MANEJAR MAS ADELANTE
+				this.listaRs = lista;
+				this.cliente = lista.get(lista.size() - 1).getCliente();
+				this.vehiculo = lista.get(lista.size() - 1).getVehiculo();
+				model.addAttribute("valor", lista.get(lista.size() - 1).getValorTotalPagar());
+				pagina = "vistaCliFechaSi";
+			} else {
+				Vehiculo vehi = this.iVehiculoService.buscarPlaca(vehiculo.getPlaca());
+				List<Reserva> inicio = this.iReservaService.ordenarFechas(vehi.getReserva(), "inicio");
+				List<Reserva> fina = this.iReservaService.ordenarFechas(vehi.getReserva(), "fin");
+				model.addAttribute("inicio", fina);
+				model.addAttribute("fin", inicio);
+				pagina = "vistaCliFechaNo";
+			}
 		} else {
 			pagina = "vistaCliFechaNo";
 		}
+
 		return pagina;
+	}
+
+	@GetMapping("/datosVerificar")
+	public String paginaVistaIntegridad(Reserva reserva, Model model) {
+
+		listaRs.get(listaRs.size() - 1).setTarjeta(reserva.getTarjeta());
+
+		model.addAttribute("cliente", cliente);
+		model.addAttribute("vehiculo", vehiculo);
+		model.addAttribute("reserva", listaRs.get(listaRs.size() - 1));
+
+		return "vistaCliDatosVerificar";
+
+	}
+
+	@PostMapping("/RegistrarReserva")
+	public String insertarCliente(Model model) {
+//		listaRs.get(listaRs.size() - 1).setEstado("G");
+//		this.iReservaService.crear(listaRs.get(listaRs.size() - 1));
+//		vehiculo.setDisponibilidad("ND");
+//		vehiculo.setReserva(listaRs);
+//		cliente.setReserva(listaRs);
+//		this.iVehiculoService.actualizar(vehiculo);
+//		this.clienteService.actualizar(cliente);
+		model.addAttribute("numero", listaRs.get(listaRs.size() - 1).getNumero());
+		return "vistaCliRegistradoReserva";
 	}
 
 }

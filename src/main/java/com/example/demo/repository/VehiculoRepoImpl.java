@@ -43,6 +43,12 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 
 		return query.getResultList();
 	}
+	
+	@Override
+	public List<Vehiculo> buscarParaValidar() {		
+		TypedQuery<Vehiculo> query = this.entityManager.createQuery("select v from Vehiculo v ",Vehiculo.class);
+		return query.getResultList();
+	}
 
 	@Override
 	public void actualizar(Vehiculo vehiculo) {
@@ -97,5 +103,6 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 		List<Vehiculo> listaMarca = query.getResultList();
 		return listaMarca;
 	}
+
 
 }

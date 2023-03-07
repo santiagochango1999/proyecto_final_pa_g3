@@ -13,6 +13,7 @@ public interface IVehiculoService {
 	public Vehiculo buscarId(Integer id);
 
 	public List<VehiculoMyMDTO> buscarTodos();
+	public List<Vehiculo> buscarParaValidar();
 
 	public void actualizar(Vehiculo vehiculo);
 
@@ -24,5 +25,7 @@ public interface IVehiculoService {
 	
 	public List<VehiculoDTO> buscarVehiculoDisponible(String marca , String modelo);
 	
-	 public List<Vehiculo> buscarMarca(String marca);
+	public List<Vehiculo> buscarMarca(String marca);
+	
+	public Boolean validacionPlaca(List<Vehiculo> vehiculos,String Placa);
 }
