@@ -60,4 +60,11 @@ public class ReservaDTO {
 	public void setNumeroTarjeta(String numeroTarjeta) {
 		this.numeroTarjeta = numeroTarjeta;
 	}
+
+	@Override
+	public String toString() {
+		return "ReservaDTO [placa=" + placa + ", cedula=" + cedula + ", fechaInicio=" + fechaInicio + ", fechaFin="
+				+ fechaFin + ", numeroTarjeta=" + numeroTarjeta + "]";
+	}
+
 }

@@ -29,12 +29,15 @@ public class ReservaRepoImpl implements IReservaRepo {
 	@Override
 	public Reserva buscarNumero(Integer numero) {
 		// TODO Auto-generated method stub
-		return this.entityManager.find(Reserva.class, numero);
+		TypedQuery<Reserva> query = this.entityManager.createQuery("select r from Reserva r where r.numero=: dato",
+				Reserva.class);
+		query.setParameter("dato", numero);
+		return query.getSingleResult();
 	}
 
 	@Override
 	public List<Reserva> buscarReserva() {
-		TypedQuery<Reserva> query = this.entityManager.createQuery("select r from Reserva r",Reserva.class);
+		TypedQuery<Reserva> query = this.entityManager.createQuery("select r from Reserva r", Reserva.class);
 		List<Reserva> listaTotal = query.getResultList();
 		return listaTotal;
 	}
@@ -47,15 +50,27 @@ public class ReservaRepoImpl implements IReservaRepo {
 	}
 
 	@Override
-	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
-		// TODO Auto-generated method stub
-		TypedQuery<Reserva> myQuery = this.entityManager.createQuery(
-				"select e from Reserva e where e.fechaInicio>= :datoFechaInicio AND e.fechafinal<= :datoFechaFin",
+	public Reserva buscarPorfecha(LocalDateTime fechaInicio) {
+		TypedQuery<Reserva> query = this.entityManager.createQuery("select r from Reserva r where r.fechaInicio= :dato",
 				Reserva.class);
-		myQuery.setParameter("datoFechaInicio", fechaInicio);
-		myQuery.setParameter("datoFechaFin", fechaFin);
-		List<Reserva> reservas = myQuery.getResultList();
-		return reservas;
+		query.setParameter("dato", fechaInicio);
+		return query.getSingleResult();
+	}
+
+	@Override
+	public List<Reserva> buscarReporte(String nombre) {
+		TypedQuery<Reserva> query = this.entityManager
+				.createQuery("select r from Reserva r join fetch r.cliente cl where cl.nombre= :dato", Reserva.class);
+		query.setParameter("dato", nombre);
+		return query.getResultList();
+	}
+
+	@Override
+	public List<Reserva> buscarReporteVehi(String placa) {
+		TypedQuery<Reserva> query = this.entityManager
+				.createQuery("select r from Reserva r join fetch r.vehiculo vh where vh.placa= :dato", Reserva.class);
+		query.setParameter("dato", placa);
+		return query.getResultList();
 	}
 
 }

@@ -6,6 +6,7 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collector;
@@ -19,6 +20,8 @@ import org.springframework.util.comparator.Comparators;
 
 import com.example.demo.modelo.Cliente;
 import com.example.demo.modelo.Vehiculo;
+import com.example.demo.modelo.dto.Reporte;
+import com.example.demo.modelo.dto.ReporteVehi;
 import com.example.demo.repository.IReservaRepo;
 import com.example.demo.modelo.Reserva;
 
@@ -73,46 +76,17 @@ public class ReservaServiceImpl implements IReservaService {
 	}
 
 	// ORDENAMIENTO DE FECHAS
-//	@Override
-//	public List<LocalDateTime> oredenamientoFechas(Vehiculo vehiculo) {
-//
-//		List<Reserva> lista = vehiculo.getReserva();
-//		List<LocalDateTime> listafecha = new ArrayList<>();
-//		List<LocalDateTime> listafinal = new ArrayList<>();
-//
-//		// VALIDACION DE FECHAS
-//		for (Reserva listare : lista) {
-//			listafecha.add(listare.getFechaInicio());
-//			listafecha.add(listare.getFechafinal());
-//		}
-//		List<LocalDateTime> listaOrden = listafecha.stream().sorted().collect(Collectors.toList());
-////
-////		for (int i = 1; i <= (listaOrden.size()) / 2; i = i + 2) {
-//////			System.out.println("desde: " + listaOrden.get(i) + " hasta: " + listaOrden.get(i + 1));
-////			listafinal.add(listaOrden.get(i));
-////			listafinal.add(listaOrden.get(i + 1));
-////		}
-//
-//		return listaOrden;
-//	}
-
 	@Override
-	public List<Reserva> ordenarFechas(List<Reserva> reserva, String inicio) {
+	public List<Reserva> ordenarFechas(List<Reserva> reserva) {
 		List<Reserva> reservas;
-		if (inicio.equals("inicio")) {
-			reservas = reserva.stream().sorted(Comparator.comparing(Reserva::getFechaInicio))
-					.collect(Collectors.toList());
-		} else {
-			reservas = reserva.stream().sorted(Comparator.comparing(Reserva::getFechafinal))
-					.collect(Collectors.toList());
-		}
+		reservas = reserva.stream().sorted(Comparator.comparing(Reserva::getFechaInicio)).collect(Collectors.toList());
 		return reservas;
 	}
 
 	// VALIDACION DE FECHAS
 	public Boolean validacion(LocalDateTime inicio, LocalDateTime fin, List<Reserva> reserva) {
 
-		Boolean val = null;
+		Boolean val = true;
 		for (Reserva r : reserva) {
 			if (r.getFechafinal() != null && r.getFechaInicio() != null) {
 
@@ -134,15 +108,28 @@ public class ReservaServiceImpl implements IReservaService {
 	}
 
 	@Override
-	public void Retirar(String tipoRetiro) {
-		// TODO Auto-generated method stub
+	public List<Reserva> reporteFechas(LocalDateTime inicio, LocalDateTime fin, List<Reserva> reserva) {
+		List<Reserva> lista = new ArrayList<>();
+		for (Reserva r : reserva) {
+			if (r.getFechafinal() != null && r.getFechaInicio() != null) {
 
+				if ((r.getFechaInicio().isBefore(inicio) && r.getFechaInicio().isBefore(fin))
+						&& (r.getFechafinal().isBefore(inicio) && r.getFechafinal().isBefore(fin))
+						|| (r.getFechaInicio().isAfter(inicio) && r.getFechaInicio().isAfter(fin))
+								&& (r.getFechafinal().isAfter(inicio) && r.getFechafinal().isAfter(fin))) {
+				} else {
+					lista.add(r);
+				}
+			}
+		}
+
+		return lista;
 	}
 
 	@Override
-	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+	public void Retirar(String tipoRetiro) {
 		// TODO Auto-generated method stub
-		return this.iReservaRepo.buscarPorRangoDeFechas(fechaInicio, fechaFin);
+
 	}
 
 	@Override
@@ -161,6 +148,73 @@ public class ReservaServiceImpl implements IReservaService {
 	public void crear(Reserva reserva) {
 		// TODO Auto-generated method stub
 		this.iReservaRepo.ingresar(reserva);
+	}
+
+	@Override
+	public Reserva buscarPorfecha(LocalDateTime fechaInicio) {
+		// TODO Auto-generated method stub
+		return this.iReservaRepo.buscarPorfecha(fechaInicio);
+	}
+
+	@Override
+	public List<Reserva> buscarReporte(String nombre) {
+		// TODO Auto-generated method stub
+		return this.iReservaRepo.buscarReporte(nombre);
+	}
+
+	@Override
+	public List<Reporte> segundoReporte(List<Cliente> clientes) {
+
+		List<Reporte> reporte = new ArrayList<>();
+
+		for (int i = 0; i < clientes.size(); i++) {
+
+			List<Reserva> list = this.buscarReporte(clientes.get(i).getNombre());
+
+			for (Reserva res : list) {
+				Reporte reportes = new Reporte();
+				reportes.setCedula(clientes.get(i).getCedula());
+				reportes.setNombre(clientes.get(i).getNombre());
+				reportes.setValorIva(res.getValorIva());
+				reportes.setValoTotal(res.getValorTotalPagar());
+				reporte.add(reportes);
+			}
+		}
+		return reporte;
+	}
+
+	@Override
+	public List<ReporteVehi> tercerReporte(List<Vehiculo> vehiculos) {
+
+		BigDecimal valorIvaF = new BigDecimal(0);
+		BigDecimal valorTotalF = new BigDecimal(0);
+		List<ReporteVehi> reporte = new ArrayList<>();
+
+		for (Vehiculo vehiculo : vehiculos) {
+
+			ReporteVehi reportes = new ReporteVehi();
+
+			List<Reserva> list2 = this.buscarReporteVehi(vehiculo.getPlaca());
+
+			for (Reserva res : list2) {
+				valorIvaF = valorIvaF.add(res.getValorIva());
+				valorTotalF = valorTotalF.add(res.getValorTotalPagar());
+			}
+			reportes.setPlaca(vehiculo.getPlaca());
+			reportes.setModelo(vehiculo.getModelo());
+			reportes.setValorIva(valorIvaF);
+			reportes.setValoTotal(valorTotalF);
+			reporte.add(reportes);
+			valorIvaF = new BigDecimal(0);
+			valorTotalF = new BigDecimal(0);
+		}
+		return reporte;
+	}
+
+	@Override
+	public List<Reserva> buscarReporteVehi(String placa) {
+		// TODO Auto-generated method stub
+		return this.iReservaRepo.buscarReporteVehi(placa);
 	}
 
 }

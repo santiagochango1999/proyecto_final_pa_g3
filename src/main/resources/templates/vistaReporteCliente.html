@@ -12,19 +12,23 @@
 	<table style="margin: 0 auto;">
 		<thead>
 			<tr>
-				<th>DESDE</th>
-				<th>HASTA</th>
+				<th>Cedula</th>
+				<th>Nombre</th>
+				<th>Valor Iva</th>
+				<th>Valor total</th>
 			</tr>
 		</thead>
 		<tbody>
-
-			<tr th:each="inicio:${inicio}">
-				<td th:text="${inicio.fechaInicio}"></td>
-				<td th:text="${inicio.fechaFin}"></td>
+			<tr th:each="reporte:${reporte}">
+				<td th:text="${reporte.cedula}"></td>
+				<td th:text="${reporte.nombre}"></td>
+				<td th:text="${reporte.valorIva}"></td>
+				<td th:text="${reporte.valoTotal}"></td>
 
 			</tr>
 		</tbody>
 	</table>
+
 </body>
 
 </html>

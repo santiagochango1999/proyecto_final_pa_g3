@@ -59,15 +59,21 @@ public class ClienteServiceImpl implements IClienteService {
 
 	@Override
 	public Boolean validacionCedula(List<Cliente> clientes, String cedula) {
-		Boolean val=false;
+		Boolean val = false;
 		for (Cliente cliente : clientes) {
-			if(cedula.equals(cliente.getCedula())) {
-				val=true;
-			}else {
-				val=false;
+			if (cedula.equals(cliente.getCedula())) {
+				val = true;
+			} else {
+				val = false;
 			}
 		}
 		return val;
+	}
+
+	@Override
+	public Cliente buscarCedulaUna(String cedula) {
+		// TODO Auto-generated method stub
+		return this.clienteRepo.buscarCedulaUna(cedula);
 	}
 
 }

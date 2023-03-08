@@ -11,10 +11,14 @@ public interface IReservaRepo {
 
 	public Reserva buscarNumero(Integer numero);
 
+	public Reserva buscarPorfecha(LocalDateTime fechaInicio);
+
+	public List<Reserva> buscarReporte(String nombre);
+
+	public List<Reserva> buscarReporteVehi(String placa);
+
 	public List<Reserva> buscarReserva();
 
 	public void eliminar(Integer numero);
-	
-	public List<Reserva> buscarPorRangoDeFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin);
-	
+
 }

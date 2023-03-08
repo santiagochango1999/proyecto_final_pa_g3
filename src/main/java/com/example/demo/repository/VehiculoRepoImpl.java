@@ -43,10 +43,10 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 
 		return query.getResultList();
 	}
-	
+
 	@Override
-	public List<Vehiculo> buscarParaValidar() {		
-		TypedQuery<Vehiculo> query = this.entityManager.createQuery("select v from Vehiculo v ",Vehiculo.class);
+	public List<Vehiculo> buscarParaValidar() {
+		TypedQuery<Vehiculo> query = this.entityManager.createQuery("select v from Vehiculo v ", Vehiculo.class);
 		return query.getResultList();
 	}
 
@@ -82,7 +82,6 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 		return typedQuery.getSingleResult();
 	}
 
-	
 	@Override
 	public List<VehiculoDTO> buscarVehiculoDisponible(String marca, String modelo) {
 		// TODO Auto-generated method stub
@@ -104,5 +103,14 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 		return listaMarca;
 	}
 
+	@Override
+	public List<Vehiculo> buscarVehiculosVip(String fecha) {
+		TypedQuery<Vehiculo> myQuery = this.entityManager.createQuery(
+				"SELECT v FROM Vehiculo v JOIN v.reserva r WHERE concat(r.fechaInicio, '') LIKE :datoFecha AND concat(r.fechafinal, '') LIKE :datoFecha",
+				Vehiculo.class);
+		myQuery.setParameter("datoFecha", fecha);
+
+		return myQuery.getResultList();
+	}
 
 }

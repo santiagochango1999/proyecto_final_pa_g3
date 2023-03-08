@@ -40,7 +40,7 @@ public class ClienteRepoImpl implements IClienteRepo {
 	@Override
 	public List<Cliente> buscarTodos() {
 
-		TypedQuery<Cliente> query = this.entityManager.createQuery("select c from Cliente c",Cliente.class);
+		TypedQuery<Cliente> query = this.entityManager.createQuery("select c from Cliente c", Cliente.class);
 		List<Cliente> listaTotal = query.getResultList();
 
 		return listaTotal;
@@ -65,9 +65,19 @@ public class ClienteRepoImpl implements IClienteRepo {
 	@Override
 	public List<Cliente> buscarCedula(String cedula) {
 
-		Query query = this.entityManager.createQuery("select c from Cliente c where c.cedula= :datoCedula");
+		TypedQuery<Cliente> query = this.entityManager
+				.createQuery("select c from Cliente c where c.cedula= :datoCedula", Cliente.class);
 		query.setParameter("datoCedula", cedula);
-		return  query.getResultList();
+		return query.getResultList();
+	}
+
+	@Override
+	public Cliente buscarCedulaUna(String cedula) {
+		// TODO Auto-generated method stub
+		TypedQuery<Cliente> query = this.entityManager
+				.createQuery("select c from Cliente c where c.cedula= :datoCedula", Cliente.class);
+		query.setParameter("datoCedula", cedula);
+		return query.getSingleResult();
 	}
 
 }

@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.hibernate.sql.ast.tree.expression.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.modelo.Cliente;
 import com.example.demo.modelo.Reserva;
 import com.example.demo.modelo.Vehiculo;
+import com.example.demo.modelo.dto.ReservaDTO;
 import com.example.demo.modelo.dto.VehiculoDTO;
 import com.example.demo.modelo.dto.VehiculoMyMDTO;
 import com.example.demo.service.IClienteService;
@@ -138,10 +143,19 @@ public class ClienteController {
 				pagina = "vistaCliFechaSi";
 			} else {
 				Vehiculo vehi = this.iVehiculoService.buscarPlaca(vehiculo.getPlaca());
-				List<Reserva> inicio = this.iReservaService.ordenarFechas(vehi.getReserva(), "inicio");
-				List<Reserva> fina = this.iReservaService.ordenarFechas(vehi.getReserva(), "fin");
-				model.addAttribute("inicio", fina);
-				model.addAttribute("fin", inicio);
+				List<Reserva> inicio = this.iReservaService.ordenarFechas(vehi.getReserva());
+				List<ReservaDTO> desde = new ArrayList<>();
+				for (int i = 1; i <= inicio.size(); i++) {
+					ReservaDTO dto2 = new ReservaDTO();
+					dto2.setFechaInicio(inicio.get(i - 1).getFechafinal() + "");
+					if (i != inicio.size()) {
+						dto2.setFechaFin(inicio.get(i).getFechaInicio() + "");
+					} else {
+						dto2.setFechaFin("En adelante");
+					}
+					desde.add(dto2);
+				}
+				model.addAttribute("inicio", desde);
 				pagina = "vistaCliFechaNo";
 			}
 		} else {
@@ -166,13 +180,20 @@ public class ClienteController {
 
 	@PostMapping("/RegistrarReserva")
 	public String insertarCliente(Model model) {
-//		listaRs.get(listaRs.size() - 1).setEstado("G");
-//		this.iReservaService.crear(listaRs.get(listaRs.size() - 1));
-//		vehiculo.setDisponibilidad("ND");
-//		vehiculo.setReserva(listaRs);
-//		cliente.setReserva(listaRs);
-//		this.iVehiculoService.actualizar(vehiculo);
-//		this.clienteService.actualizar(cliente);
+		if (listaRs.size() == 0) {
+			listaRs.get(listaRs.size()).setEstado("G");
+			this.iReservaService.crear(listaRs.get(listaRs.size()));
+		} else {
+			listaRs.get(listaRs.size() - 1).setEstado("G");
+			this.iReservaService.crear(listaRs.get(listaRs.size() - 1));
+		}
+		vehiculo.setReserva(listaRs);
+		cliente.setReserva(listaRs);
+		this.iVehiculoService.actualizar(vehiculo);
+		this.clienteService.actualizar(cliente);
+		if (listaRs.size() == 0) {
+			model.addAttribute("numero", listaRs.get(listaRs.size()).getNumero());
+		}
 		model.addAttribute("numero", listaRs.get(listaRs.size() - 1).getNumero());
 		return "vistaCliRegistradoReserva";
 	}

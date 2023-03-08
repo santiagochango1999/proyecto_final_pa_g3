@@ -79,15 +79,21 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	@Override
 	public Boolean validacionPlaca(List<Vehiculo> vehiculos, String placa) {
 		// TODO Auto-generated method stub
-		Boolean val=false;
+		Boolean val = false;
 		for (Vehiculo vehiculo : vehiculos) {
-			if(placa.equals(vehiculo.getPlaca())) {
-				val=true;
-			}else {
-				val=false;
+			if (placa.equals(vehiculo.getPlaca())) {
+				val = true;
+			} else {
+				val = false;
 			}
 		}
 		return val;
+	}
+
+	@Override
+	public List<Vehiculo> buscarVehiculosVip(String fecha) {
+		// TODO Auto-generated method stub
+		return this.iVehiculoRepo.buscarVehiculosVip(fecha);
 	}
 
 }
